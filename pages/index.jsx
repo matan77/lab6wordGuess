@@ -1,29 +1,41 @@
 import React, { useState } from "react";
-import { getRandomWord, getRandomLetter } from "../data/words";
+
 import PlayersLst from "../components/playersLst";
 import HiddenWord from "../components/hiddenWord";
+import playersObserver from "../utils/playersObserver";
+import { observer } from "mobx-react-lite";
 
-export default function App() {
-    const [players, setPlayers] = useState([]);
+const App = observer(() => {
+    let [isStarted, setIsStarted] = useState(false);
     return (
         <>
             <div style={{ textAlign: "center" }} >
-                <PlayersLst players={players} setPlayers={setPlayers}></PlayersLst>
+                <PlayersLst isStarted={isStarted}></PlayersLst>
             </div >
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
 
-            <HiddenWord word={getRandomWord()}></HiddenWord>
             <br />
             <br />
             <br />
             <br />
             <br />
-            <button>Start Game</button>
+            {playersObserver.amountOfPlayers >= 2 ?
+                (<>
+                    <HiddenWord ></HiddenWord>
+                </>) :
+                <>
+                    <h3>Add at least 2 players to be able to start the game</h3>
+                </>}
+            < br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <button onClick={() => { setIsStarted(true) }} disabled={isStarted || playersObserver.amountOfPlayers < 2}>Start Game</button>
 
 
         </>);
 }
+
+);
+
+export default App;

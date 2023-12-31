@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
+import wordObserver from "../utils/wordObserver";
+import { observer } from "mobx-react-lite";
 
-export default function HiddenWord({ word }) {
-    const [revealedLetters, setRevealedLetters] = useState(Array(word.length).fill(false));
-
-    const revealLetter = (index) => {
-        const updatedRevealedLetters = [...revealedLetters];
-        updatedRevealedLetters[index] = true;
-        setRevealedLetters(updatedRevealedLetters);
-    };
+const HiddenWord = ({ }) => {
 
     return (
         <div>
-            {`Guess the word: ${word.split('').map((letter, index) => revealedLetters[index] ? letter : '_ ').join("")}`}
+            {`Guess the word: ${wordObserver.getWord}`}
         </div>
     );
 };
+export default HiddenWord;

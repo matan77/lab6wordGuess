@@ -1,32 +1,30 @@
 import React from "react";
 import PlayerCard from "./playerCard";
+import playersObserver from "../utils/playersObserver";
+import { observer } from "mobx-react-lite";
 
-export default function PlayersLst({ players, setPlayers }) {
+const PlayersLst = ({ isStarted }) => {
+
     const onNewPlayer = () => {
-        setPlayers([...players, {
-            name: prompt("Enter player Name:",
-                "matan"), goodGuesses: 0
-        }]);
+        let name = prompt("Enter player Name:",
+            "matan");
+        if (name) {
+            playersObserver.addPlayer(name);
+        }
     };
-
-    const deletePlayer = (index) => {
-        const updatedPlayers = [...players];
-        updatedPlayers.splice(index, 1);
-        setPlayers(updatedPlayers);
-    }
-
     return <>
         <div>
-            <h1>{`Players ${players.length}/5`}</h1>
-            <button onClick={onNewPlayer} disabled={players.length == 5}>Add Player</button>
+            <h1>{`Players ${playersObserver.amountOfPlayers}/5`}</h1>
+            <button onClick={onNewPlayer} disabled={playersObserver.amountOfPlayers == 5}>Add Player</button>
             <div style={{ display: "flex" }}>
 
-                {players.map((player, index) => (
+                {playersObserver.players.map((player, index) => (
                     <div key={index} style={{ margin: "5px" }} >
-                        <PlayerCard player={{ ...player }} onDelete={() => deletePlayer(index)} />
+                        <PlayerCard player={{ ...player }} isStarted={isStarted} onDelete={() => playersObserver.delPlayer(index)} />
                     </div>
                 ))}
             </div>
         </div>
     </>;
 };
+export default PlayersLst;
