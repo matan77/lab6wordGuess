@@ -7,8 +7,11 @@ class PlayersObserver {
         makeObservable(this, {
             players: observable,
             amountOfPlayers: computed,
+            getWinner: computed,
             addPlayer: action,
+            updatePlayer: action,
             delPlayer: action,
+            restScore: action,
         });
     }
 
@@ -16,16 +19,38 @@ class PlayersObserver {
         return this.players.length;
     }
 
+    get getWinner() {
+        let winner = this.players.reduce((prev, curr) =>
+            curr.goodGuesses > prev.goodGuesses ? curr : prev, { goodGuesses: 0 })
+        if (winner.goodGuesses === 0) {
+            return null;
+        }
+        return winner;
+    }
+
     addPlayer(name) {
         this.players.push({
             name: name,
             goodGuesses: 0,
-            lastLetter: null
+            letter: null
         });
+    }
+    updatePlayer(letter, index) {
+        this.players[index].goodGuesses++;
+        this.players[index].letter = letter;
+
     }
 
     delPlayer(index) {
         this.players.splice(index, 1);
+    }
+
+    restScore() {
+        this.players = this.players.map((p) => ({
+            ...p,
+            goodGuesses: 0,
+            letter: null
+        }))
     }
 }
 
