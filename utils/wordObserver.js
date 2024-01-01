@@ -1,15 +1,14 @@
 import { observable, action, computed, makeObservable } from 'mobx';
-import { getRandomWord, getRandomLetter } from "../data/words";
+import { getRandomWord } from "../data/words";
 
 class WordObserver {
     constructor() {
-        this.word = getRandomWord();
-        this.revealedLetters = Array(this.word.length).fill(false);
-        this.incorrectGuesses = [];
+        this.refreshWord();
         makeObservable(this, {
             word: observable,
             revealedLetters: observable,
             getWord: computed,
+            isRevealed: computed,
             refreshWord: action,
             addGuess: action
         });
@@ -17,13 +16,21 @@ class WordObserver {
     get getWord() {
         return this.word.split('').map((letter, index) => this.revealedLetters[index] ? letter : '_ ').join("");
     }
+    get isRevealed() {
+        return this.revealedLetters.every((curr) => curr);
+    }
 
     refreshWord() {
         this.word = getRandomWord();
-        this.revealedLetters = Array(word.length).fill(false);
+        this.revealedLetters = Array(this.word.length).fill(false);
+        this.incorrectGuesses = [];
     }
 
     addGuess(guessedLetter) {
+        if (this.incorrectGuesses.includes(guessedLetter))
+        {
+            return false;
+        }
         let isGuess = false;
         this.word.split('').forEach((letter, index) => {
             if (letter === guessedLetter) {
@@ -31,6 +38,9 @@ class WordObserver {
                 isGuess = true;
             }
         });
+        if (!isGuess) {
+            this.incorrectGuesses.push(guessedLetter);
+        }
         return isGuess;
     }
 }
