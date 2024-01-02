@@ -3,7 +3,7 @@ import PlayerCard from "./playerCard";
 import { observer } from "mobx-react-lite";
 
 
-const PlayersLst = observer(({ playersObserver, isStarted })=> {
+const PlayersLst = observer(({ playersObserver, gameObserver})=> {
 
     const onNewPlayer = () => {
         let name = prompt("Enter player Name:",
@@ -15,11 +15,11 @@ const PlayersLst = observer(({ playersObserver, isStarted })=> {
     return <>
         <div>
             <h1>{`Players ${playersObserver.amountOfPlayers}/5`}</h1>
-            <button onClick={onNewPlayer} disabled={isStarted || playersObserver.amountOfPlayers === 5}>Add Player</button>
+            <button onClick={onNewPlayer} disabled={gameObserver.isStarted || playersObserver.amountOfPlayers === 5}>Add Player</button>
             <div style={{ display: "flex" }}>
 
                 {playersObserver.players.map((player, index) => (
-                    <PlayerCard key={index} player={{ ...player }} isStarted={isStarted} onDelete={() => playersObserver.delPlayer(index)} />
+                    <PlayerCard key={index} player={{ ...player }} isStarted={gameObserver.isStarted} onDelete={() => playersObserver.delPlayer(index)} />
                 ))}
             </div>
         </div>

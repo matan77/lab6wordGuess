@@ -19,7 +19,7 @@ const App = () => {
     return (
         <>
             <div style={{ textAlign: "center" }} >
-                <PlayersLst playersObserver={playersObserver} isStarted={gameObserver.isStarted}></PlayersLst>
+                <PlayersLst playersObserver={playersObserver} gameObserver={gameObserver} isStarted={gameObserver.isStarted}></PlayersLst>
             </div >
 
             <br />
