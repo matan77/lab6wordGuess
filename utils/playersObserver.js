@@ -1,6 +1,6 @@
 import { observable, action, computed, makeObservable } from 'mobx';
 
-class PlayersObserver {
+export default class PlayersObserver {
     players = [];
 
     constructor() {
@@ -12,7 +12,7 @@ class PlayersObserver {
             updatePlayer: action,
             delPlayer: action,
             restScore: action,
-        });
+        })
     }
 
     get amountOfPlayers() {
@@ -53,6 +53,3 @@ class PlayersObserver {
         }))
     }
 }
-
-const playersObserver = new PlayersObserver();
-export default playersObserver;

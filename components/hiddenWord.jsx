@@ -1,7 +1,6 @@
 import React from 'react';
-import wordObserver from "../utils/wordObserver";
-
-const HiddenWord = ({ }) => {
+import { observer } from 'mobx-react-lite';
+const HiddenWord = observer(({ wordObserver }) => {
 
     return (
         <>
@@ -20,5 +19,5 @@ const HiddenWord = ({ }) => {
             </div >
         </>
     );
-};
+});
 export default HiddenWord;

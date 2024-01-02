@@ -1,18 +1,26 @@
-import { observable, action, computed, makeObservable } from 'mobx';
+import { observable, action, computed, makeObservable, autorun} from 'mobx';
 import { getRandomWord } from "../data/words";
 
-class WordObserver {
+export default class WordObserver {
     constructor() {
-        this.refreshWord();
+        this.word = "";
+        this.revealedLetters = [];
+        this.incorrectGuesses = [];
+        this.letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
         makeObservable(this, {
             word: observable,
             revealedLetters: observable,
+            incorrectGuesses: observable,
+            letters: observable,
             getWord: computed,
             isRevealed: computed,
             refreshWord: action,
             addGuess: action
         });
+        
     }
+    
     get getWord() {
         return this.word.split('').map((letter, index) => this.revealedLetters[index] ? letter : '_ ').join("");
     }
@@ -24,13 +32,14 @@ class WordObserver {
         this.word = getRandomWord();
         this.revealedLetters = Array(this.word.length).fill(false);
         this.incorrectGuesses = [];
+        this.letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    }
+
+    getGuess() {
+        return this.letters[Math.floor(Math.random() * (this.letters.length))];
     }
 
     addGuess(guessedLetter) {
-        if (this.incorrectGuesses.includes(guessedLetter))
-        {
-            return false;
-        }
         let isGuess = false;
         this.word.split('').forEach((letter, index) => {
             if (letter === guessedLetter) {
@@ -38,12 +47,10 @@ class WordObserver {
                 isGuess = true;
             }
         });
-        if (!isGuess) {
+        if (!isGuess && this.letters.length > 0) {
             this.incorrectGuesses.push(guessedLetter);
         }
+        this.letters.splice(this.letters.indexOf(guessedLetter),1);
         return isGuess;
     }
 }
-
-const wordObserver = new WordObserver();
-export default wordObserver;
